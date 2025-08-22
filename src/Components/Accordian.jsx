@@ -6,12 +6,14 @@ function Accordian() {
   const [multiple, setMultiple] = useState([]); // [] indicates it holds array of ids
   const [enablemulti, setEnablemulti] = useState(false); //false means default is single selection
 
+  
   function handleSingleSelection(getId) {
     setSelected(getId === selected ? null : getId);
   }
 
+  
   function handlemultipleselection(getId) {
-    let multiple2 = [...multiple]; //copy the array
+    let multiple2 = [...multiple]; //copy the array (to avoid mutating state directly)
     const findCurrentId = multiple2.indexOf(getId); //checks if the id is already opened
 
     if (findCurrentId === -1) {
@@ -23,26 +25,27 @@ function Accordian() {
     setMultiple(multiple2); //updates the state with modified array
   }
 
+  
   function handleModeToggle() {
     setEnablemulti(!enablemulti); 
 
     if (!enablemulti) {
-      setMultiple(Data.map((item) => item.id));
-      setSelected(null); // Reset the single selection
+      setMultiple(Data.map((item) => item.id)); //Opens all accordion items at once
+      setSelected(null); // Clears any previous single-selection state (so single and multi don’t conflict)
     } else {
-      setMultiple([]);
+      setMultiple([]); // if enablemulti is true then it closes all the accordians, will go back to single-selection mode
     }
   }
 
+  
   return (
     <div className="accordian">
       <button onClick={handleModeToggle}>
         {enablemulti ? "Close All" : "Enable Multi Selection"}
       </button>
 
-      {Data &&
-        Data.length > 0 &&
-        Data.map((DataItem) => (
+      {Data && Data.length > 0 && Data.map((DataItem) => (
+          
           <div className="accordian-item" key={DataItem.id}>
             <div
               onClick={
